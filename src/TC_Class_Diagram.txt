@@ -1,0 +1,104 @@
+@startuml
+
+package "ServiceMgr" {
+
+abstract IAtConfManagerSink {
+
+}
+
+abstract ISmDownloadSink {
+
+}
+
+abstract IPcmMessageSink {
+}
+
+abstract ISmSessionMgr {
+
+}
+
+abstract ISmMgrBase {
+# CPfwServiceMgr* m_pServiceMgr;
++ {abstract} BOOL Initialize(CPfwServiceMgr* pMgr)
+}
+
+abstract IPfwCommandHandler {
++ {abstract} LRESULT OnWindowsMsg()
+}
+
+interface CPfwServiceMgr {
+
+}
+
+interface CSmQuickStartSessionMgr {
+
+}
+
+interface CSmAppShareSessionMgr {
+}
+
+ISmMgrBase -> CPfwServiceMgr
+ISmSessionMgr -|> ISmMgrBase
+
+CPfwServiceMgr -|> IAtConfManagerSink
+CPfwServiceMgr -|> ISmDownloadSink
+
+CSmQuickStartSessionMgr -|> ISmDownloadSink
+CSmQuickStartSessionMgr -|> IPcmMessageSink
+CSmQuickStartSessionMgr -|> ISmSessionMgr
+
+CSmAppShareSessionMgr -|> ISmSessionMgr
+CSmAppShareSessionMgr -|> IPfwCommandHandler
+CSmAppShareSessionMgr -|> IPcmMessageSink
+CSmAppShareSessionMgr -|> ISmDownloadSink
+}
+
+package “WebExMgr” {
+
+class CWebExMgrCtl {
+# CTCSerViceMgr* m_pTcServiceMgr;
+}
+
+class CTCServiceMgr {
++ CTCUIMgr m_tcUIMgr;
++ CTCUserMgr m_tcUserMgr;
++ CTCQuickStartSessionMgr m_tcQSMgr;
++ CTCAppShareSessionMgr m_tcAppShareMgr;
+}
+
+class CTCUIMgr {
++ {abstract} BOOL Initialize(CPfwServiceMgr* pMgr);
++ CTCServiceMgr* m_pTCServiceMgr;
+}
+
+class CTCQuickStartDialog {
+- CTCServiceMgr* m_pTCServiceMgr;
+}
+
+class CTCQuickStartSessionMgr {
++ CTCQuickStartDialog* m_pQSDialog;
+- CTCServiceMgr* m_pTCServiceMgr;
+}
+
+CWebExMgrCtl *- CTCServiceMgr 
+
+CTCServiceMgr *- CTCUIMgr
+CTCServiceMgr *- CTCUserMgr
+CTCServiceMgr *- CTCQuickStartSessionMgr
+CTCServiceMgr *- CTCAppShareSessionMgr
+
+CTCUIMgr -> CTCServiceMgr
+
+CTCQuickStartDialog -> CTCServiceMgr
+CTCQuickStartSessionMgr *- CTCQuickStartDialog
+CTCQuickStartSessionMgr -> CTCServiceMgr
+
+
+}
+
+CTCServiceMgr -|> CPfwServiceMgr
+
+CTCQuickStartSessionMgr -|> CSmQuickStartSessionMgr
+CTCAppShareSessionMgr -|> CSmAppShareSessionMgr
+
+@enduml
