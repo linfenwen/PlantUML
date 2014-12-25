@@ -25,4 +25,5 @@ note over "CTCUIMgr" : SendMessage(ID_TC_SHARE_APPLICATION_BO) 
 "CTCBOUIMgr" -> "CTCBOSessionMgr" : CreateBOShareSession
 "CTCBOSessionMgr" -> "CSmAppShareSessionMgr" : ShowRunningAppDialog
 note over "CTCAppShareSessionMgr", "CSmAppShareSessionMgr" : CTCAppShareSessionMgr public CSmAppShareSessionMgr
+
 @enduml
